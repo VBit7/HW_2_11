@@ -2,16 +2,16 @@ import fastapi
 import fastapi
 import database
 
-import planes.models as models
-import planes.schemas as schemas
+import contacts.models as models
+import contacts.schemas as schemas
 
-router = fastapi.APIRouter(prefix='/planes', tags=["planes"])
+router = fastapi.APIRouter(prefix='/contacts', tags=["contacts"])
 
 @router.get("/")
 async def root(
     db=fastapi.Depends(database.get_database)
-) -> list[schemas.PlaneResponseSchema]:
-    return [plane for plane in db.query(models.PlaneModel).all()]
+) -> list[schemas.ContactResponseSchema]:
+    return [contact for contact in db.query(models.ContactModel).all()]
 
 
 @router.get("/err")

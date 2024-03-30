@@ -1,10 +1,10 @@
 import sqlalchemy
 import sqlalchemy.orm as orm
 
-import planes.models
+import contacts.models
 
 BASES = [
-    planes.models.Base.metadata
+    contacts.models.Base.metadata
 ]
 
 DBSession = None

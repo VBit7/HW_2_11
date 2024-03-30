@@ -1,11 +1,12 @@
 import sqlalchemy.orm as orm
 
+
 class Base(orm.DeclarativeBase):
     pass
 
 
-class PlaneModel(Base):
-    __tablename__ = 'planes'
+class ContactModel(Base):
+    __tablename__ = 'contacts'
 
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
     model: orm.Mapped[str]

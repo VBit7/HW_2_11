@@ -2,14 +2,14 @@ import fastapi
 import uvicorn
 import starlette.middleware.base
 
-import planes.routes
-import planes.exceptions
+import contacts.routes
+import contacts.exceptions
 
 import middlewares
 
 app = fastapi.FastAPI()
 
-app.include_router(planes.routes.router, prefix='/api')
+app.include_router(contacts.routes.router, prefix='/api')
 
 app.add_middleware(
     starlette.middleware.base.BaseHTTPMiddleware,
@@ -18,7 +18,7 @@ app.add_middleware(
 
 app.add_exception_handler(
     fastapi.HTTPException, 
-    planes.exceptions.item_not_found_error_handler
+    contacts.exceptions.item_not_found_error_handler
 )
 
 if __name__ == "__main__":

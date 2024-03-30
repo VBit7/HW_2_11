@@ -1,6 +1,6 @@
 import pydantic
 
-class PlaneResponseSchema(pydantic.BaseModel):
+class ContactResponseSchema(pydantic.BaseModel):
     id: int
     model: str
     image_url: str
