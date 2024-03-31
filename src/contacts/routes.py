@@ -10,6 +10,7 @@ import contacts.repositories as repo  # noqa
 
 from contacts.schemas import ContactSchema, ContactResponse  # noqa
 
+
 router = fastapi.APIRouter(prefix='/contacts', tags=["contacts"])
 
 
@@ -47,6 +48,22 @@ async def update_contact(body: ContactSchema, contact_id: int = Path(ge=1),
 async def delete_contact(contact_id: int = Path(ge=1), db: AsyncSession = Depends(database.get_db)):
     contact = await repo.delete_contact(contact_id, db)
     return contact
+
+
+@router.get("/search/{query}", response_model=list[ContactResponse])
+async def search_contacts(query: str, db: AsyncSession = Depends(database.get_db)):
+    contacts = await repo.search_contacts(query, db)
+    if contacts is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="NOT FOUND")
+    return contacts
+
+
+@router.get("/upcoming_birthdays/", response_model=list[ContactResponse])
+async def upcoming_birthdays(db: AsyncSession = Depends(database.get_db)):
+    contacts = await repo.congratulate(db)
+    if contacts is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="NOT FOUND")
+    return contacts
 
 
 @router.get("/err")

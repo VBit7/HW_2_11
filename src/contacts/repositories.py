@@ -1,4 +1,6 @@
-from sqlalchemy import select
+from datetime import date, timedelta
+
+from sqlalchemy import select, or_, and_, extract, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from contacts.models import Contact  # noqa
@@ -49,3 +51,48 @@ async def delete_contact(contact_id: int, db: AsyncSession):
         await db.delete(contact)
         await db.commit()
     return contact
+
+
+async def search_contacts(query: str, db: AsyncSession):
+    statement = (
+        select(Contact)
+        .filter(
+            or_(
+                Contact.first_name.ilike(f"%{query}%"),
+                Contact.last_name.ilike(f"%{query}%"),
+                Contact.email.ilike(f"%{query}%"),
+            )
+        )
+    )
+    contacts = await db.execute(statement)
+    return contacts.scalars().all()
+
+
+async def congratulate(db: AsyncSession):
+    current_date = date.today()
+    end_date = current_date + timedelta(days=7)
+
+    stmt = (
+        select(Contact)
+        .where(
+            or_(
+                and_(
+                    extract('month', Contact.date_of_birth) == current_date.month,
+                    extract('day', Contact.date_of_birth) >= current_date.day,
+                    extract('day', Contact.date_of_birth) <= end_date.day,
+                ),
+                and_(
+                    extract('month', Contact.date_of_birth) == end_date.month,
+                    extract('day', Contact.date_of_birth) <= end_date.day,
+                ),
+                and_(
+                    extract('month', Contact.date_of_birth) == current_date.month,
+                    extract('day', Contact.date_of_birth) == current_date.day,
+                ),
+            )
+        )
+        .order_by(extract('day', Contact.date_of_birth))
+    )
+
+    contacts = await db.execute(stmt)
+    return contacts.scalars().all()
