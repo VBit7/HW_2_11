@@ -8,7 +8,7 @@ class Base(orm.DeclarativeBase):
     pass
 
 
-class ContactModel(Base):
+class Contact(Base):
     __tablename__ = 'contacts'
 
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
@@ -18,11 +18,3 @@ class ContactModel(Base):
     phone_number: orm.Mapped[str] = orm.mapped_column(sqa.String(50))
     date_of_birth: orm.Mapped[date] = orm.mapped_column(sqa.Date)
     additional_data: orm.Mapped[str] = orm.mapped_column(sqa.String(250))
-
-
-# class Todo(Base):
-#     __tablename__ = 'todos'
-#     # id: Mapped[int] = mapped_column(primary_key=True)
-#     title: Mapped[str] = mapped_column(String(50), index=True)
-#     description: Mapped[str] = mapped_column(String(250))
-#     completed: Mapped[bool] = mapped_column(default=False)
